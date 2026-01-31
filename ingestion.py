@@ -37,5 +37,5 @@ for name in page_names:
             "source": page_url
         }
 
-with open("fandom_pages.json", "w", encoding="utf-8") as f:
+with open("fandom_dump.json", "w", encoding="utf-8") as f:
     json.dump(all_pages, f, ensure_ascii=False, indent=2)
