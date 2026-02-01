@@ -1,8 +1,8 @@
 #Fetch info dumps from Shadow Slave's fandom site
 import requests
 import json
-
-page_names = ["Sunny", "Nephis", "Shadow_Slave_Wiki"]
+# "Sunny", "Nephis", "Shadow_Slave_Wiki", 
+page_names = ["Sunny/Memories"]
 url = "https://shadowslave.fandom.com/api.php"
 all_pages = {}
 
