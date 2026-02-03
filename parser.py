@@ -2,6 +2,7 @@
 import json
 import mwparserfromhell as mw
 import re
+import os
 
 INPUT_FILE = "fandom_dump.json"
 OUTPUT_FILE = "json_formatted.json"
@@ -84,29 +85,35 @@ def make_json_page(page_title, json_objs):
 #                                #
 #--------------------------------#
 
-with open(INPUT_FILE, "r", encoding="utf-8") as f:
-    data = json.load(f)
 
-pages = []
+if os.path.exists(INPUT_FILE):
+    with open(INPUT_FILE, "r", encoding="utf-8") as f:
+        data = json.load(f)
 
-for page_title, page_info in data.items():
-    wiki_text = page_info.get("content", "")
+    os.remove(INPUT_FILE)
 
-    results = re.findall(r"\{\|(.*?)\|\}", wiki_text, re.DOTALL)
+    pages = []
+
+    for page_title, page_info in data.items():
+        wiki_text = page_info.get("content", "")
+
+        results = re.findall(r"\{\|(.*?)\|\}", wiki_text, re.DOTALL)
+            
+        tables = []
+        for text in results:
+            if "table" in text:
+                tables.append(text)
         
-    tables = []
-    for text in results:
-        if "table" in text:
-            tables.append(text)
-    
-    json_objs = []
+        json_objs = []
 
-    for table in tables:
-        headers, rows = parse_table(table)
-        json_objs.extend(make_json_obj(headers, rows))
-    
-    pages.append(make_json_page(page_title, json_objs))
+        for table in tables:
+            headers, rows = parse_table(table)
+            json_objs.extend(make_json_obj(headers, rows))
+        
+        pages.append(make_json_page(page_title, json_objs))
 
 
-with open (OUTPUT_FILE, "w", encoding="utf-8") as f:
-    json.dump(pages, f, indent=2, ensure_ascii=False)
+    with open (OUTPUT_FILE, "w", encoding="utf-8") as f:
+        json.dump(pages, f, indent=2, ensure_ascii=False)
+else:
+    print(INPUT_FILE, "not found.")
