@@ -39,3 +39,7 @@ for name in page_names:
 
 with open("fandom_dump.json", "w", encoding="utf-8") as f:
     json.dump(all_pages, f, ensure_ascii=False, indent=2)
+# changed the all_pages -> text to isolate text
+
+
+print(f"Downloaded {len(page_names)} pages.")
