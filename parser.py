@@ -79,11 +79,11 @@ def make_json_obj(headers, rows):
 def make_json_page(page_title, json_objs):
     return {page_title: json_objs}
 
-#--------------------------------#
-#                                #
-#           Start Here           #
-#                                #
-#--------------------------------#
+#-------------------------------------#
+#                                     #
+#           Start Code Here           #
+#                                     #
+#-------------------------------------#
 
 
 if os.path.exists(INPUT_FILE):
