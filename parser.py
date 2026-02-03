@@ -6,8 +6,8 @@ import re
 INPUT_FILE = "fandom_dump.json"
 OUTPUT_FILE = "json_formatted.json"
 
-TABLE_NAME =  " class=\"article-table datatable moddedTable\""
-# " class=\"wikitable sortable\""
+TABLE_NAME = " class=\"article-table datatable moddedTable\""
+TABLE_NAME1 = " class=\"wikitable sortable\""
 
 def clean(text: str) -> str:
     return mw.parse(text).strip_code().strip()
@@ -32,8 +32,7 @@ def parse_table(text: str):
             # some are ! scope="col" | Name
             if "|" in header:
                 header = header.split("|", 1)[1]
-            headers.append(header)
-            # clean(header) -> header
+            headers.append(clean(header))
             i += 1
         else:
             break
@@ -59,10 +58,10 @@ def parse_table(text: str):
 
         if current_row and line:
             current_row[-1] += "\n" + line
+            # removed clean(line) replaced with line
 
             div_count += line.count("<div")
             div_count -= line.count("</div>")
-            # removed clean(line) replaced with line
     
     if current_row:
         rows.append(current_row)
@@ -113,52 +112,5 @@ for page_title, page_info in data.items():
         headers, rows = parse_table(table)
         json_objs.extend(make_json_obj(headers, rows))
 
-    # structured_json_obj = []
-    
-    # for i, table in enumerate(tables, start = 1):
-    #     headers, rows
-
-
-
-
-        # redirect_target = follow_redirect(wiki_text)
-    # if redirect_target:
-    #     print(f"{page_title} redirects to {redirect_target}, skipping for now")
-    #     continue
-
-    # parsed = mw.parse(wiki_text)
-    # print("Templates: ", len(parsed.filter_templates()))
-
-    # for i in parsed.filter_templates():
-    #     print("Template: ", i)
-
-    # print("Headings: ", len(parsed.filter_headings()))
-#     entity = Entity(page_title)
-
-#     for template in parsed.filter_templates():
-#         entity.attributes.update({param.name.strip(): str(param.value).strip() for param in template.params})
-
-#     entity.links = [
-#         str(link.title).strip()
-#         for link in parsed.filter_wikilinks()
-#         if str(link.title).strip() and not str(link.title).strip().startswith("Category:")
-#     ]
-
-#     entity.categories = [
-#         str(link.title).strip()[len("Category:"):]
-#         for link in parsed.filter_wikilinks()
-#         if str(link.title).strip().startswith("Category:")
-#     ]
-
-# #Causing some errors with what i am assuming is nested template stuff
-#     # templates = list(parsed.filter_templates())
-#     # for template in templates:
-#     #     parsed.remove(template)
-
-#     entity.description = parsed.strip_code().strip()
-#     structured_entities.append(entity.to_dict())
-
 with open (OUTPUT_FILE, "w", encoding="utf-8") as f:
     json.dump(json_objs, f, indent=2, ensure_ascii=False)
-
-# print(f"Processed {len(structured_entities)} pages. Saved to {OUTPUT_FILE}")

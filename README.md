@@ -1,9 +1,13 @@
-Downloads wiki info from the Fandom API and parses it into structured JSON
+Fandom Wiki Parser Specifically for the Shadow Slave Fandom Site
+
+At the moment: <br>
+Designed to parse tables and put the results into a structured json file.
+
 
 
 ingestion.py - Imports info dump from Shadow Slave's Fandom site
 <br>
-json_parser.py - Parse json dump and structure it
+parser.py - Parse json dump and structure it
 
 Using:
 <br>
