@@ -3,7 +3,9 @@ import requests
 import json
 # "Sunny", "Nephis", "Shadow_Slave_Wiki", 
 page_names = ["Sunny/Memories"]
+page_names1 = ["Caduceus_Clay"]
 url = "https://shadowslave.fandom.com/api.php"
+url1 = "https://criticalrole.fandom.com/api.php"
 all_pages = {}
 
 def get_page_text(url, page_name):

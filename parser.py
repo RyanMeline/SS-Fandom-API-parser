@@ -6,31 +6,39 @@ import re
 INPUT_FILE = "fandom_dump.json"
 OUTPUT_FILE = "json_formatted.json"
 
+TABLE_NAME =  " class=\"article-table datatable moddedTable\""
+# " class=\"wikitable sortable\""
 
 def clean(text: str) -> str:
     return mw.parse(text).strip_code().strip()
 
 def parse_table(text: str):
     lines = text.splitlines()
-    
+
     headers = []
     rows = []
     current_row = []
+    div_count = 0 #there are nested div's in some descriptions
 
-    i = 1
+    # first line is usually the {| class= stuff, so skip first line if its that
+    if lines[0].startswith("!"):
+        i = 0
+    else:
+        i = 1
     while i < len(lines):
-        print("in while")
         line = lines[i].strip()
         if line.startswith("!"):
             header = line[1:].strip()
+            # some are ! scope="col" | Name
             if "|" in header:
                 header = header.split("|", 1)[1]
-            headers.append(clean(header))
+            headers.append(header)
+            # clean(header) -> header
             i += 1
         else:
-            print("exiting while")
             break
-    print(i)
+
+    
     for line in lines[i:]:
         line = line.rstrip()
 
@@ -40,16 +48,21 @@ def parse_table(text: str):
                 current_row = []
             continue
             
-        if line.startswith("|"):
+        if line.startswith("|") and div_count == 0:
             cell = line[1:].strip()
-            if "|" in cell:
-                cell = cell.split("|")[-1].strip()
-            
-            current_row.append(clean(cell))
+            current_row.append(cell)
+            #replaced clean(cell) with cell
+
+            div_count += cell.count("<div")
+            div_count -= cell.count("</div>")
             continue
 
         if current_row and line:
-            current_row[-1] += "\n" + clean(line)
+            current_row[-1] += "\n" + line
+
+            div_count += line.count("<div")
+            div_count -= line.count("</div>")
+            # removed clean(line) replaced with line
     
     if current_row:
         rows.append(current_row)
@@ -91,7 +104,7 @@ for page_title, page_info in data.items():
         
     tables = []
     for text in results:
-        if text.startswith(" class=\"article-table datatable moddedTable\""):
+        if text.startswith(TABLE_NAME):
             tables.append(text)
     
     json_objs = []
