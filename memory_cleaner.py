@@ -15,9 +15,7 @@ from bs4 import BeautifulSoup
 INPUT_FILE = "json_formatted.json"
 
 def name_parse(name: str):
-    
-#doesnt work properly (check: wooden staff)
-    
+# For stripping leading id and data sort values
     name_split = []
     if "|" in name and "id=" in name or "data-sort-value=" in name:
         name_split = name.split("|", 1)
@@ -26,29 +24,34 @@ def name_parse(name: str):
             name_split[0] = ""
 
 # HTML STRIPPER
-    testStr = ""
     for part in name_split:
         part = part.strip()
         soup = BeautifulSoup(part, "html.parser")
-        testStr = soup.get_text()
-        name += testStr
+        name += soup.get_text()
 
+# Stripping Templates and extra, unneeded data
     wikicode = mw.parse(name)
-    for template in reversed(wikicode.filter_templates(recursive=True)):
+    for template in reversed(wikicode.filter_templates(recursive=True)): #undo from the inside out
         try:
             val = "" + str(template.get(1).value).strip()
         except ValueError:
             val = ""
         
-        if template.name.strip().lower() == "tooltip":
-            wikicode.replace(template, val)
+       #  if template.name.strip().lower() == "tooltip":
+      #  wikicode.replace(template, val)
         if template.name.strip().lower() == "c":
-            val = " | " + val
-            wikicode.replace(template,val)
+            val = " | " + val # for formatting / style lol. all the {{c| were bonus info, so separating them with a |
+        wikicode.replace(template,val)
 
     return wikicode.strip_code().strip()
 
 def chapter_parse(chapter: str):
+    # do the check for id= and data-sort before a | and remove it
+    # replace <br> with ", "
+    # templace shananigans, can probably copy a lot from the names
+
+    # can copy a lot (most) code from name_parse
+
     return chapter
 
 def status_parse(status: str):
@@ -79,11 +82,15 @@ with open("cleaned_memory_names.json", "w") as f:
                 # can fix by making new json objects
                 # not doing that rn
                 if "Chapter Received" in item:
+                    print(item["Chapter Received"])
                     item["Chapter Received"] = " " #chapter_parse(item["Chapter Received"])
                 elif "Chapter Appeared" in item:
+                    print(item["Chapter Appeared"])
                     item["Chapter Appeared"] = " " #chapter_parse(item["Chapter Appearered"])    
                 else:
+                    print(item["Chapter"])
                     item["Chapter"] = " " #chapter_parse(item["Chapter"])
+
                 item["Status"] = " " #status_parse(item["Status"])
                 item["Description"] = " " #desc_parse(item["Description"])
     json.dump(data, f, ensure_ascii=False, indent = 2)
