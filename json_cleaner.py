@@ -1,16 +1,8 @@
-# when cleaning names
-# id=\nStuff\n|{{tooltop|Stuff<br>}}
-# Save after |
-# delete {{tooltop|
-# delete <br> or |
-# whichever comes after the Name, check for both
-
 import os
 import json
 import mwparserfromhell as mw
 import re
 from bs4 import BeautifulSoup
-
 
 INPUT_FILE = "json_formatted.json"
 OUTPUT_FILE = "memories_echoes_shadows.json"
@@ -67,7 +59,7 @@ def chapter_parse(chapter: str):
             val = " "
         
         if template.name.strip().lower() == "c":
-            val = " | " + val # for formatting / style lol. all the {{c| were bonus info, so separating them with a |
+            val = " | " + val
         wikicode.replace(template,val)
 
     # strip [[ ]] from these
@@ -85,10 +77,8 @@ def status_parse(status: str):
             val = " "
         
         if template.name.strip().lower() == "c":
-            val = "|" + val # for formatting / style lol. all the {{c| were bonus info, so separating them with a |
+            val = "|" + val
         wikicode.replace(template,val)
-
-
     return wikicode.strip_code().strip()
 
 def desc_parse(desc):
@@ -117,21 +107,17 @@ def desc_parse(desc):
 
 
 def main():
-#    if os.path.exists(INPUT_FILE):
     with open(INPUT_FILE, "r", encoding="utf-8") as f:
         data = json.load(f)
-            # os.remove(INPUT_FILE)
-    # os.remove("cleaned_memory_names.txt")
-
 
 
     # set to ademndum mode, change to write once json structures are built (in ademndum bc adding in a loop, can add json all at once)
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-    #     print("test")
         for page in data:
             for page_name, items in page.items():
                 for item in items:
                     item["Name"] = name_parse(item["Name"])
+                    
                     # inconsistant naming convention caused this
                     # can fix by making new json objects
                     # not doing that rn
@@ -152,11 +138,6 @@ def main():
                         item["Description"] = desc_parse(item["Description"])
         json.dump(data, f, ensure_ascii=False, indent = 2)
         os.remove(INPUT_FILE)
-    #f.write(data)
- #   else:
-  #      print(INPUT_FILE, "not found.")
-
-
 
 if __name__ == "__main__":
     main()
