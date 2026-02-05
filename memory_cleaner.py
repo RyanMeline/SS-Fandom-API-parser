@@ -69,7 +69,7 @@ def chapter_parse(chapter: str):
             val = " | " + val # for formatting / style lol. all the {{c| were bonus info, so separating them with a |
         wikicode.replace(template,val)
 
-
+    # strip [[ ]] from these
     return wikicode.strip_code().strip() 
 
 def status_parse(status: str):
@@ -88,45 +88,31 @@ def status_parse(status: str):
         wikicode.replace(template,val)
 
 
-    return wikicode.strip()
+    return wikicode.strip_code().strip()
 
 def desc_parse(desc):
-    # Need to split up this section based on <div>'s
-    soup = BeautifulSoup(desc, 'html.parser')
-    # print(soup.prettify())
+    # Strip HTML
+    desc = re.sub("<(.*?)>", " ", desc)
 
-    parsed = {}
-
-    # can add things that share names by just adding like " | " + text
-    # then do .strip( |) to strip spaces and | from the endif thats at the beginning
-
-    clear_divs = ""
-
-    # bone singer could be an issue
-
-    all_divs = soup.find_all("div", recursive = True)
-    # need to save beginning part and parse end with divs
-
-    old_div = ""
-    for div in reversed(all_divs):
-        # right now have <div> aoiwndoa <div> aidunwad </div> </div>
-        if old_div:
-            div = str(div).replace(old_div, " ")
-        old_div = str(div)
-        print(old_div)
-        
-        # grab inner, strip html, replace with 0
-       # print(div)
-        print("------------")
-
-
-    # Titles are stored in between the divs, then info after that div
-    # <div stuff>Description<div>information</div</div><div>Runes<div>'''Rank'''</div></div>
-    # I want to try and separate that out into different json sections, store it inside of desc, and return it
-    # use beautiful soup
-    # desc = re.sub("<(.*?)>", " ", desc)
-    print("-------------------------------------------------")
-    return desc.strip()
+    # Strip templates
+    wikicode = mw.parse(desc)
+    for template in reversed(wikicode.filter_templates(recursive=True)): #undo from the inside out
+        if template.name.strip().lower() == "c" or template.name.strip().lower() == "note":
+            val = ""
+            try:
+                val = str(template.get(1).value)
+            except ValueError:
+                val = ""
+        if template.name.strip().lower() == "scrollbox":
+            try:
+                val = (str(template.get("content").value))
+            except ValueError:
+                val = ""
+        wikicode.replace(template,val)
+    
+    # Some random triple newlines, reduce anything 2 newlines or more down to 2 newlines    newline [anynumber of spaces, newlines]+  [ ]*\\n[[ ]*\\n]+
+    wikicode = re.sub(r"[ ]*\n[ \n]+", "\\n\\n", str(wikicode))
+    return wikicode.strip()
 
 
 #def main():
