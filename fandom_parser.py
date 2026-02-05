@@ -41,8 +41,9 @@ def parse_table(text: str):
     
     for line in lines[i:]:
         line = line.rstrip()
-
+        
         if line.startswith("|-"):
+            div_count = 0
             if current_row:
                 rows.append(current_row)
                 current_row = []
@@ -79,11 +80,7 @@ def make_json_obj(headers, rows):
 def make_json_page(page_title, json_objs):
     return {page_title: json_objs}
 
-#-------------------------------------#
-#                                     #
-#           Start Code Here           #
-#                                     #
-#-------------------------------------#
+
 
 def main():
     if os.path.exists(INPUT_FILE):
@@ -98,7 +95,10 @@ def main():
             wiki_text = page_info.get("content", "")
 
             results = re.findall(r"\{\|(.*?)\|\}", wiki_text, re.DOTALL)
-                
+            
+            # titles = re.findall(r"==(.*?)==", wiki_text, re.DOTALL)
+            # if I want to do something with the titles
+
             tables = []
             for text in results:
                 if "table" in text:

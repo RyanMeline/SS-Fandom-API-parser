@@ -13,6 +13,7 @@ from bs4 import BeautifulSoup
 
 
 INPUT_FILE = "json_formatted.json"
+OUTPUT_FILE = "memories_echoes_shadows.json"
 
 def name_parse(name: str):
 # For stripping leading id and data sort values
@@ -97,8 +98,8 @@ def desc_parse(desc):
     # Strip templates
     wikicode = mw.parse(desc)
     for template in reversed(wikicode.filter_templates(recursive=True)): #undo from the inside out
+        val = ""
         if template.name.strip().lower() == "c" or template.name.strip().lower() == "note":
-            val = ""
             try:
                 val = str(template.get(1).value)
             except ValueError:
@@ -115,41 +116,48 @@ def desc_parse(desc):
     return wikicode.strip()
 
 
-#def main():
+def main():
 #    if os.path.exists(INPUT_FILE):
-with open(INPUT_FILE, "r", encoding="utf-8") as f:
-    data = json.load(f)
-        # os.remove(INPUT_FILE)
-# os.remove("cleaned_memory_names.txt")
+    with open(INPUT_FILE, "r", encoding="utf-8") as f:
+        data = json.load(f)
+            # os.remove(INPUT_FILE)
+    # os.remove("cleaned_memory_names.txt")
 
-all_pages = []
 
-# set to ademndum mode, change to write once json structures are built (in ademndum bc adding in a loop, can add json all at once)
-with open("cleaned_memory_names.json", "w", encoding="utf-8") as f:
-#     print("test")
-    for page in data:
-        for page_name, items in page.items():
-            for item in items:
-                item["Name"] = name_parse(item["Name"])
-                # inconsistant naming convention caused this
-                # can fix by making new json objects
-                # not doing that rn
-                if "Chapter Received" in item:
-                    item["Chapter Received"] = chapter_parse(item["Chapter Received"])
-                elif "Chapter Appeared" in item:
-                    item["Chapter Appeared"] = chapter_parse(item["Chapter Appeared"])    
-                else:
-                    item["Chapter"] = chapter_parse(item["Chapter"])
 
-                item["Status"] = status_parse(item["Status"])
-                item["Description"] = desc_parse(item["Description"])
-    json.dump(data, f, ensure_ascii=False, indent = 2)
+    # set to ademndum mode, change to write once json structures are built (in ademndum bc adding in a loop, can add json all at once)
+    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
+    #     print("test")
+        for page in data:
+            for page_name, items in page.items():
+                for item in items:
+                    item["Name"] = name_parse(item["Name"])
+                    # inconsistant naming convention caused this
+                    # can fix by making new json objects
+                    # not doing that rn
+
+                    if "Chapter Received" in item:
+                        item["Chapter Received"] = chapter_parse(item["Chapter Received"])
+                    elif "Chapter Appeared" in item:
+                        item["Chapter Appeared"] = chapter_parse(item["Chapter Appeared"])    
+                    else:
+                        item["Chapter"] = chapter_parse(item["Chapter"])
+
+                    if "Status" in item:
+                        item["Status"] = status_parse(item["Status"])
+
+                    if "Details" in item:
+                        item["Details"] = desc_parse(item["Details"])
+                    else:
+                        item["Description"] = desc_parse(item["Description"])
+        json.dump(data, f, ensure_ascii=False, indent = 2)
+        os.remove(INPUT_FILE)
     #f.write(data)
  #   else:
   #      print(INPUT_FILE, "not found.")
 
 
 
-# if __name__ == "__main__":
-#     main()
+if __name__ == "__main__":
+    main()
 

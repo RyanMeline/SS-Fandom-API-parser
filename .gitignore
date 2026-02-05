@@ -1,7 +1,14 @@
 *.json
+
+.pyc
+.py~
+.un~
+
+
 *.txt
 *.pyc
 __pycache__
 
 # vim files
 *.*~
+
