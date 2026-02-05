@@ -1,7 +1,6 @@
 Fandom Wiki Parser Specifically for the Shadow Slave Fandom Site
-
-At the moment: <br>
-Designed to parse tables and put the results into a structured json file.
+<br>
+Breaks up
 
 
 

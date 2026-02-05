@@ -2,10 +2,12 @@
 import requests
 import json
 import fandom_parser
+import json_cleaner
 
 # "Sunny", "Nephis", "Shadow_Slave_Wiki", 
 OUTPUT_FILE = "fandom_dump.json"
-page_names = ["Sunny/Memories","Nephis/Memories","Cassie/Memories","Effie/Memories","Kai/Memories","Mordret/Memories","Morgan/Memories","Anvil/Memories","Rain/Memories"]
+page_names = ["Bastion/Creature_Catalogue","Burned_Forest/Creature_Catalogue","Chained_Isles/Creature_Catalogue","Eternal_City/Creature_Catalogue","Forgotten_Shore/Creature_Catalogue","Godgrave/Creature_Catalogue","Hollow_Mountains/Creature_Catalogue","Kingdom_of_Hope/Creature_Catalogue","Moonriver_Plain/Creature_Catalogue","Nightmare_Desert/Creature_Catalogue","Northern_Quadrant_Siege_Capital/Creature_Catalogue","Ravenheart_(Citadel)/Creature_Catalogue","Southern_Quadrant/Creature_Catalogue","Stormsea/Creature_Catalogue","Tomb_of_Ariel/Creature_Catalogue","True_Bastion/Creature_Catalogue","Forgotten_Shore/Creature_Catalogue","Sunny/Echoes_&_Shadows","Nephis/Echoes","Morgan/Echoes","Anvil/Echoes","Sunny/Memories","Nephis/Memories","Cassie/Memories","Effie/Memories","Kai/Memories","Mordret/Memories","Morgan/Memories","Anvil/Memories","Rain/Memories","Jet/Memories"]
+# "Sunny/Memories","Nephis/Memories","Cassie/Memories","Effie/Memories","Kai/Memories","Mordret/Memories","Morgan/Memories","Anvil/Memories","Rain/Memories"
 url = "https://shadowslave.fandom.com/api.php"
 all_pages = {}
 
@@ -48,3 +50,4 @@ with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
 print(f"Downloaded {len(page_names)} pages.")
 
 fandom_parser.main()
+json_cleaner.main()
