@@ -14,6 +14,7 @@ memory_cleaner.py - Cut out HTML and MediaWiki formatting to clean results for e
 Using:
 <br>
 mwparserfromhell | MediaWiki parser
+<br>
 BeatifulSoup4 | HTML parser
 
 <br>
