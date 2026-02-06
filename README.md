@@ -5,7 +5,7 @@ This is a Python-based tool that downloads pages from a Fandom (MediaWiki) wiki,
 parses inconsistent wiki markup and embedded HTML, and converts the content of stored tables
 into structured, searchable JSON data.
 
-It is built to handle irregular formatting that stems from inconsistant naming conventions
+It is built to handle irregular formatting that stems from inconsistent naming conventions
 and structure commonly found in community wikis
 
 ## Features
@@ -21,7 +21,7 @@ and structure commonly found in community wikis
 - `download_pages.py` – Fetches pages from the Fandom (MediaWiki) API and stores raw content as JSON
 - `fandom_parser.py` – Parses wiki markup and embedded HTML to separate tables into semi-structured data
 - `json_cleaner.py` – Parses json structure to clean results of HTML and wiki markup 
-   *(Specifically designed for the Shadow Slave wiki due to inconsistant and unconventional logic)
+   *(Specifically designed for the Shadow Slave wiki due to inconsistent and unconventional logic)
 - `search.py` – Provides basic keyword search over parsed results
 
 ## Tech Stack
