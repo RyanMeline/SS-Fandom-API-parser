@@ -10,10 +10,10 @@ OUTPUT_FILE = "memories_echoes_shadows.json"
 def name_parse(name: str):
 # For stripping leading id and data sort values
     name_split = []
-    if "|" in name and "id=" in name or "data-sort-value=" in name or "rowspan=" in name:
+    if "|" in name and ("id=" in name or "data-sort-value=" in name or "rowspan=" in name):
         name_split = name.split("|", 1)
         name = ""
-        if "id=" in name_split[0] or "data-sort-value=" in name_split[0]:
+        if "id=" in name_split[0] or "data-sort-value=" in name_split[0] or "rowspan=" in name_split[0]:
             name_split[0] = ""
 
 # HTML STRIPPER
