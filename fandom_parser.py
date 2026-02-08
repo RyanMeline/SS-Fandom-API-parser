@@ -55,7 +55,6 @@ def parse_table(text: str):
             continue
             
         if rowspan_count > 0 and rowspan_col == current_column: # if we inside a rowspan
-            print(rowspan_contents)
             current_row.append(rowspan_contents)
             current_column += 1
             rowspan_count -= 1
